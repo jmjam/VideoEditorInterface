@@ -1,0 +1,464 @@
+body{
+    background-color: rgb(141, 141, 141);
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+h1{
+    position: relative;
+    margin: auto;
+    font-size: 20px;
+    border-style: none none solid none;
+}
+h2{
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+}
+p {
+    color: rgb(255, 255, 255);
+    font-family: Arial, Helvetica, sans-serif;
+    border-style: none none solid none;
+    border-bottom-color: rgba(0, 0, 0, 0.075)
+}
+
+#filmHeader {
+    position: absolute;
+    top: 2px;
+    left: 0px;
+    width: 263px;
+    height: 28px;
+    /* height: 28px; */
+    background-color: rgb(0, 0, 0);
+}
+#musicHeader {
+    position: absolute;
+    top: 2px;
+    left: 268px;
+    width: 55px;
+    height: 28px;
+    background-color: rgb(0, 0, 0);
+}
+#filmBox {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    width: 350px;
+    max-width: 350px;
+    height: 636px;
+    /* padding: 5px;
+    padding-top: 0px; */
+    overflow-y: scroll; 
+    border-style: none none solid none;
+    /* border:1px solid rgb(0, 0, 0); */
+}
+#filmStrip{
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    margin-left: -15px;
+    margin-top: -1px;
+
+    background-image: url("./img/filmboximages/filmStrip1.jpg");
+    background-repeat: repeat-y;
+    background-size: contain;
+}
+#filmStrip2{
+    position: absolute;
+    right: 0px;
+    width: 15px;
+    height: 100%;
+    margin-right: -15px;
+    margin-top: -1px;
+    background-image: url("./img/filmboximages/filmStrip1.jpg");
+    background-repeat: repeat-y;
+    background-size: contain;
+}
+
+#clipBox {
+    position: relative;
+    text-align: center;
+    float: left;
+    margin-left: 15px;
+    /* top: 0px;
+    left: 5px; */
+    width: 70%;
+    min-height: 100%;
+    /* height: 120%; */
+    background-color:  rgb(62, 62, 62);
+    /* border:1px solid rgb(0, 0, 0); */
+}
+
+#defaultClip{
+    background-color: rgb(103, 103, 103);
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+ }
+.clip {
+    /* margin-bottom: 5px;   */
+    background-color: rgb(103, 103, 103);
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+}
+
+#clipText{
+    /* margin-top:-56.25%; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 100%;
+    font-family: Helvetica,Arial, sans-serif
+}
+
+.transBox {
+    display: inline-block;
+    position: relative;
+    /* margin-left: 50%; */
+    margin-top: 5px;
+    margin-bottom: 5px;
+    /* background-color: red; */
+    width: 90px;
+    height: 51px;
+    overflow: hidden;
+    opacity: 1;
+    /* padding-top: 56.25%; 16:9 Aspect Ratio */
+ }
+
+#musicBox {
+    position: absolute;
+    text-align: center;
+    top: 0px;
+    right: 0px;
+    /* width: 18%; */
+    margin-right: -75px;
+    width: 55px;
+    min-height: 100%;
+    /* height: 100%; */
+    background-color:  rgb(62, 62, 62);
+    /* border:1px solid rgb(0, 0, 0); */
+}
+
+/* -------------------------------------------------------- */
+/* FILES STYLES - tabs - project - transitions - effects */
+/* -------------------------------------------------------- */
+#filesBox {
+    display: inline-block;
+    position: absolute;
+    top: 40px;
+    left: 360px;
+    width: 400px;
+    height: 270px; 
+    background-color:  rgb(62, 62, 62);
+    /* border:1px solid rgb(255, 255, 255); */
+}
+#filesTabs{
+    top: 5px;
+    left: 350px; 
+    width: 50%; 
+    position: absolute; 
+}
+#fileContents{
+    width: 99.75%;
+    height: 100%;
+    overflow-y: auto;
+    /* margin-top: -6%; */
+    /* border: solid 1px black; */
+}
+
+#toolBar{
+    position: absolute;
+    width: 355px;
+    padding-left: 2.5px;
+    height: 50px;
+    top: 320px;
+    left: 380px;
+    background-color: rgb(62, 62, 62);
+}
+.toolButtons{   
+    position: relative;
+    float: left; 
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    background-color: #C5C5C5;
+}
+.toolButtons:hover{
+    opacity: 0.5;
+}
+
+#addIcon:hover {
+    opacity: 0.5;
+    color: white;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+.tooltip .tooltipExport {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 90%;
+    right: 105%;
+    /* left: 105%; */
+}
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: 90%;
+    /* left: 105%; */
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext{
+    visibility: visible;
+}
+.tooltip:hover .tooltipExport{
+    visibility: visible;
+}
+
+
+.fileButton{
+    border: none;
+    outline: none;
+    background-color: rgb(62, 62, 62); /* Green */
+    color: white;
+    position: relative;
+    cursor: pointer;
+    /* margin-top: -100px; */
+    /* transform: translateY(-100%); */
+    padding: 10px 21.7px;
+    text-align: center;
+    text-decoration: none;
+    display: table-row;
+    font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+.fileButton:hover {
+    background-color: rgb(0, 0, 0);
+    color: white;
+}
+.importButton{
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background-color: rgb(0, 23, 233); /* Green */
+    color: white;
+    position: relative;
+    /* float: right; */
+    cursor: pointer;
+    /* margin-top: -45px; */
+    /* transform: translateY(-120%); */
+    padding: 10px 15px;
+    text-align: center;
+    /* text-decoration: none; */
+    display: table-row;
+    font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+.exportButton{
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    background-color: rgb(243, 146, 0); /* Green */
+    color: white;
+    position: relative;
+    float: right;
+    cursor: pointer;
+    /* margin-top: -45px; */
+    /* transform: translateY(-120%); */
+    padding: 10px 15px;
+    text-align: center;
+    /* text-decoration: none; */
+    display: table-row;
+    font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#projectBar{
+    position:absolute;
+    right: 5px;
+    top: 5px;
+    width: 485px;
+    height:40px;
+    /* background-color: #C5C5C5; */
+
+}
+
+.fileOptions{
+    padding: 10px; 
+    /* margin-top:-5%; */
+    /* border: solid black; */
+    text-align: left;
+}
+
+#detailsBox {
+    position: absolute;
+    left: 360px;
+    bottom: 5px;
+    width: 400px;
+    height: 42%;
+
+    background-color: rgb(62, 62, 62); 
+    /* border:1px solid rgb(0, 0, 0); */
+    overflow-y: scroll; 
+}
+.detailContents{
+    padding: 10px;
+}
+#previewBox {
+    position: absolute;
+    top: 50px;
+    right: 5px;
+    /* margin-bottom: 5px;   */
+    background-color: rgb(17, 17, 17);
+    width: 38%;
+    height: 38%;
+    /* width: 100%;
+    padding-top: 56.25%; */
+    /* border:1px solid rgb(0, 0, 0); */
+}
+#previewHeader{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 115px;
+    width: 100px;
+    background-color: rgb(63, 63, 63);    
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    z-index: -1;
+    /* background-color: white; */
+}
+#previewBox2 {
+    position: absolute;
+    bottom: 50px;
+    right: 5px;
+    /* margin-bottom: 5px;   */
+    background-color: rgb(17, 17, 17);
+    width: 38%;
+    height: 38%;
+    /* width: 100%;
+    padding-top: 56.25%; */
+    /* border:1px solid rgb(0, 0, 0); */
+}
+#clipPreviewHeader{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 115px;
+    width: 100px;
+    background-color: rgb(63, 63, 63);    
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    z-index: -1;
+    /* background-color: white; */
+}
+
+#mediaControls{
+    position: absolute;
+    bottom:-18%;
+    background-color: rgb(62, 62, 62);
+    width: 100%;
+    height: 18%;
+}
+
+
+input[type="range"]{
+    -webkit-appearance: none;
+    -moz-apperance: none;
+    border-radius: 6px;
+    height: 6px;
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        right top,
+        color-stop(0.0, rgb(0, 153, 255)),
+        color-stop(0.0, #C5C5C5)
+    );
+}
+
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    background-color: #E9E9E9;
+    border: 1px solid #CECECE;
+    height: 15px;
+    width: 15px;
+}
+.mediaButton:hover{
+    opacity: 0.3;
+}
+
+.ui-state-highlight { height: 1.5em; line-height: 1.2em; }  
+
+/* scrollbar stuff */
+::-webkit-scrollbar {
+    width: 17px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(62, 62, 62); 
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(32, 32, 32); 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #2c2c2c; 
+}
+
+/* .ffhighlight {
+    /* background-color: cyan; */
+    /* font-weight: bold; */
+    /* box-shadow: solid 5px cyan;
+}*/
+
+.highlight
+{
+    position:relative;
+    -webkit-box-shadow:0 1px 4px rgb(0, 195, 255), 0 0 40px rgba(0, 217, 255, 0.1) inset;
+       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.959), 0 0 40px rgba(0, 0, 0, 0.911) inset;
+            box-shadow:0 1px 4px rgba(0, 225, 255, 0.932), 0 0 40px rgba(0, 238, 255, 0.733) inset;
+}
+.effect8:before, .effect8:after
+{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:10px;
+    bottom:10px;
+    left:0;
+    right:0;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+}

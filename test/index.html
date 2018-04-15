@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Video Editor Interface</title>
+    <link rel="stylesheet" href="defaults.css">
+    <link rel="stylesheet" type="text/css" href="./jquery-ui-1.12.1/jquery-ui.css" />
+</head>
+
+<body>
+    <script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.min.js');</script>
+    <script src="./jquery-ui-1.12.1/jquery-ui.js"></script>
+    <!-- <script src="./node_modules/jquery-ui-1.12.1/jquery.ui.swappable.js"></script> -->
+    <script>
+        $(function () {
+
+            // <div class="transBox">
+            //         <img src="./img/filmboximages/transbox.png" alt="" style="width: 100%;" title="Drag a transition here">
+            //     </div>
+            //     <div class="clip">
+            //         <div id="clipText">Drag a Video Clip here</div>
+            //     </div>
+
+            //Setting all elements that are draggable (ie put clip onto the track)
+            $(".movie").draggable({
+                revert: false,
+                zIndex: 2500,
+                helper: 'clone',
+                scroll: false,
+                opacity: 0.5
+            });
+            $(".music").draggable({
+                revert: false,
+                scroll: false,
+                zIndex: 2500,
+                helper: 'clone',
+                opacity: 0.5
+            });
+            $(".transItem").draggable({
+                revert: false,
+                scroll: false,
+                zIndex: 2500,
+                helper: 'clone',
+                opacity: 0.5
+            });
+            $(".textItem").draggable({
+                revert: false,
+                scroll: false,
+                zIndex: 2500,
+                helper: 'clone',
+                opacity: 0.5
+            });
+            $(".effectItem").draggable({
+                revert: false,
+                scroll: false,
+                zIndex: 2500,
+                helper: 'clone',
+                opacity: 0.5
+            });
+
+            //making the default clip on the track be able to have things dropped into it
+            $(".clip").droppable({
+                accept: '.movie',
+                drop: function (event, ui) {
+                    newTrans = '<div class="transBox" style="width: 90px; height: 51px;"><img src="./img/filmboximages/transbox.png" alt="" style="position:absolute; width: 100%; top:0px; left:0px;" title="Drag a transition here"></div>';
+                    newClip = '<div class="clip"><div id="clipText">Drag a Video Clip here</div></div>';
+                    $(newTrans).appendTo('#sortable');
+                    $(newClip).appendTo('#sortable');
+                    $(this).append('<div class="movieOnClip" onclick="loadMedia()" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><img src="/img/previews/yopierre.png" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;" title="Drag and drop Effects and Text here to customize your video"><span class="succ" title="Full implementation would make this dynamically change when the clip size changes, it is currently static" style="padding: 2px; position: absolute; top: 0px; right: 0px; background-color:black;">00:00:30</span></div>');
+                    //                    $(this).append('<div class="parentMovie" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><div class="movieOnClip" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><img src="/img/previews/yopierre.png" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;" title="Drag and drop Effects and Text here to customize your video"><span class="succ" title="Full implementation would make this dynamically change when the clip size changes, it is currently static" style="padding: 2px; position: absolute; top: 0px; right: 0px; background-color:black;">00:00:30</span></div></div>');
+                    // $(this).append();
+                    $(this).droppable("option", "disabled", true);
+                }//end drop
+            });
+
+            //handler for making any videoclip placed on track be able to have things dropped into it (text,effects)
+            $(document).on('DOMNodeInserted', ".movieOnClip", function () {
+                $(this).droppable({
+                    accept: '.textItem, .effectItem',
+                    drop: function (event, ui) {
+                        //if certain item
+                        if (ui.draggable.hasClass('textItem')) {
+                            $(this).append('<div class="textOnClip" title="Full implementation would allow you to click this icon, then in the preview and detail section it would load the necessary options to allow you to edit the text/color/position,etc" style="width: 40px; height: 40px; position: absolute; bottom: 5px; left: 5px; z-index: 99; background-color:white;"><img src="./img/previews/textInsert.png" alt=""></div>');
+                        }
+                        else {//effectItem
+                            $(this).append('<div class="effectOnClip" title="Full implementation would allow you to click this icon, then in the preview and detail section it would load the options to allow you to further edit the effect on the current clip " style="width: 40px; height: 40px; position: absolute; bottom: 5px; right: 5px; z-index: 99; background-color:white;"><img src="./img/previews/effectInsert.png" alt=""></div>');
+                        }
+                    }
+                });
+                $(this).css({ "z-index": "5" });
+                $(this).parent().addClass('swapper');
+
+                var oldIndex;
+
+                $("#sortable").sortable({
+                    items: ".swapper",
+                    scroll: false,
+                    start: function (event, ui) {
+                        oldIndex = ui.item.index();
+                    },
+                    stop: function (event, ui) {
+                        var newIndex = ui.item.index();
+                        var movingForward = newIndex > oldIndex;
+                        var nextIndex = newIndex + (movingForward ? -1 : 1);
+
+                        var items = $('#sortable > div');
+
+                        // Find the element to move
+                        var itemToMove = items.get(nextIndex);
+                        if (itemToMove) {
+
+                            // Find the element at the index where we want to move the itemToMove
+                            var newLocation = $(items.get(oldIndex));
+
+                            // Decide if it goes before or after
+                            if (movingForward) {
+                                $(itemToMove).insertBefore(newLocation);
+                            } else {
+                                $(itemToMove).insertAfter(newLocation);
+                            }
+                        }
+                    }
+                });
+                $("#sortable").disableSelection();
+                // $('#sortable').swappable({items:'.clip'});
+            });
+
+            //handler to make all 'Drag video here' placeholder clips be able to have video files dragged onto them
+            $(document).on('DOMNodeInserted', ".clip", function () {
+                $(this).droppable({
+                    accept: '.movie',
+                    drop: function (event, ui) {
+                        newTrans = '<div class="transBox" style="width: 90px; height: 51px;"><img src="./img/filmboximages/transbox.png" alt="" style="position:absolute; width: 100%; top:0px; left:0px;" title="Drag a transition here"></div>';
+                        newClip = '<div class="clip"><div id="clipText">Drag a Video Clip here</div></div>';
+                        $(newTrans).appendTo('#sortable');
+                        $(newClip).appendTo('#sortable');
+                        $(this).append('<div class="movieOnClip" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><img src="/img/previews/yopierre.png" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;" title="Drag and drop Effects and Text here to customize your video"><span class="succ" title="Full implementation would make this dynamically change when the clip size changes, it is currently static" style="padding: 2px; position: absolute; top: 0px; right: 0px; background-color:black;">00:00:30</span></div>');
+                        // $(this).append();
+                        $(this).droppable("option", "disabled", true);
+                    }
+                });
+            });
+
+            $(document).on('DOMNodeInserted', ".transBox", function () {
+                $(this).droppable({
+                    accept: '.transItem',
+                    drop: function (event, ui) {
+                        //         <img class="transItem" id="cube" src="./img/transitions/cube.png" alt="">
+                        // <img class="transItem" id="wiperight" src="./img/transitions/wiperight.png" alt="">
+                        // <img class="transItem" id="wipedown" src="./img/transitions/wipedown.png" alt="">
+                        if ($(ui.draggable).is('#cube')) {
+                            $(this).append('<img title="Full implementation would allow this to be deleted and be selectable, also once clicked it would show a preview of the transition on the preview screen. The Detail box would also update to see and edit the attributes of the transition as well" class="transItemOnClip" id="cube" style="width: 100%; position: absolute; left: 0px;" src="./img/transitions/cube.png" alt="">');
+                        }
+                        else if ($(ui.draggable).is('#wiperight')) {
+                            $(this).append('<img title="Full implementation would allow this to be deleted and be selectable, also once clicked it would show a preview of the transition on the preview screen. The Detail box would also update to see and edit the attributes of the transition as well" class="transItemOnClip" id="wiperight" style="width: 100%; position: absolute; left: 0px;" src="./img/transitions/wiperight.png" alt="">');
+                        }
+                        else {
+                            $(this).append('<img title="Full implementation would allow this to be deleted and be selectable, also once clicked it would show a preview of the transition on the preview screen. The Detail box would also update to see and edit the attributes of the transition as well" class="transItemOnClip" id="wipedown" style="width: 100%; position: absolute; left: 0px;" src="./img/transitions/wipedown.png" alt="">');
+                        }
+
+                    }//end drop
+                });
+
+                $(this).addClass('highlightable');
+
+            });
+
+
+            //make the music track be able to have music dropped into it
+            $("#musicBox").droppable({
+                accept: '.music',
+                drop: function (event, ui) {
+                    $(this).append('<img class="sortableMusic highlightable musicOnTrack" src="./img/previews/musicTrack.png"style="width: 100%; height: 100%;" title="full implemntation would provide ability to delete, duplicate the audio. If play button is pressed it would show a playhead progressing along this track in sync with whats being played on the preview screen">');
+                    // $(this).append();
+                }
+            });
+
+            $(document).on('click', '.movie, .music, .textItem, .transItem, .highlightable , .effectItem, .mediaButton, .effectOnClip, .textOnClip', function () {
+                //                e.preventDefault();
+                //run removeClass on every element
+                //if the elements are not static, you might want to rerun $('.thumbnail')
+                //instead of the saved $thumbs
+                $(".highlight").removeClass('highlight');
+                //add the class to the currently clicked element (this)
+                $(this).addClass('highlight');
+            });
+
+            // $("#sortable").sortable({
+            //     placeholder: "ui-state-highlight",
+            //     items: "div:not(.transBox)"
+            // });
+
+            // // highlights any image that is clicked // $('img').click(function () { // // Set the form value // // $('#image-value').val($(this).attr('data-value'));
+            // // Unhighlight all the images // $('img').removeClass('selected'); // // Highlight the newly selected image // $(this).addClass('selected');
+            // }); 
+
+        });//end ready function
+    </script>
+
+
+
+    <div id="filmHeader">
+        <img src="./img/filmboximages/filmHeader.jpg" style="width: 100%;">
+    </div>
+    <div id="musicHeader">
+        <img src="./img/filmboximages/musicHeader.png" style="width: 100%;">
+    </div>
+
+    <div id="filmBox">
+        <div id="clipBox">
+            <div id="filmStrip"></div>
+            <div id="filmStrip2"></div>
+
+            <div id="sortable">
+                <!-- <div id="defaultClip">
+                    <div id="clipText">Drag a Video Clip here</div>
+                </div> -->
+
+                <div class="clip">
+                    <div id="clipText">Drag a Video Clip here</div>
+                </div>
+
+
+                <!-- <div class="transBox">
+                    <img src="./img/filmboximages/transbox.png" alt="" style="width: 100%;" title="Drag a transition here">
+                </div> -->
+            </div>
+
+            <div id="musicBox" title="Drag an audio file here"></div>
+
+
+        </div>
+    </div>
+
+
+
+    <!-- Divider lines -->
+    <!-- <div style="position: absolute; top: 1.5%; left: 33.75%; z-index: 2500; height: 97%; width:1px; background-color:black;"></div> -->
+    <!-- <div style="position: absolute; top: 53.25%; right: .5%; z-index: 2500; height: 1px; width:64.75%; background-color:black;"></div> -->
+
+    <!-- Tabs -->
+    <div id="filesTabs">
+        <button class="fileButton projectButton" onclick="openOption('projectFiles',this)" style="margin-left: 10px">Project Files</button>
+        <button class="fileButton" onclick="openOption('transitions',this)" style="opacity: 0.6;">Transitions</button>
+        <button class="fileButton" onclick="openOption('effects',this)" style="opacity: 0.6;">Effects</button>
+        <button class="fileButton" onclick="openOption('text',this)" style="opacity: 0.6;">Text</button>
+    </div>
+
+    <div id="projectBar">
+        <button class="importButton" title="This button would open up the file browser which a user would then be able to import the video/audio files to edit. The files are represented below in the Project Files tab. For the sake of simplicity, assume the two files in the Project Files tab represent imported files">Import
+            <div style="float:right; margin-left:5px; width:15px; height:15px;">
+                <img style="width:100%; height:100%;" src="./img/projectbar/import.png" alt="">
+            </div>
+        </button>
+
+        <div style="position:absolute; margin-left:39%; top:10px;">ProjectFile.mp4</div>
+
+        <button class="exportButton" title="This button would export the user's final video. A complete implementation would provide options like save to file, share to Youtube,Facebook,Twitter,etc.">Export
+            <div style="float:right; margin-left:5px; width:15px; height:15px;">
+                <img style="width:100%; height:100%;" src="./img/projectbar/export.png" alt="">
+            </div>
+    </div>
+
+    </button>
+    </div>
+
+
+    <!-- Files Contents -->
+    <div id="filesBox">
+
+        <div id="fileContents">
+            <div id="projectFiles" class="fileOptions">
+
+                <img class="movie" src="./img/importClips/movieClip.png" alt="">
+                <img class="music" src="./img/importClips/musicClip.png" alt="">
+
+                <!-- <div style="width: 120px; height:120px; border: solid 1px black;"></div> -->
+                <div class="tooltip">
+                    <img id="addIcon" src="./img/importClips/addVid.png" alt="" title="This icon makes it convenient for a user to add more files to this Project File Tab. Clicking this icon would open up their file browser to which they can select which files they want to import. This icon always stays at the very end of the list of imported files">
+                </div>
+
+            </div>
+
+            <div id="transitions" class="fileOptions" style="display:none">
+                <img class="transItem" id="cube" src="./img/transitions/cube.png" alt="">
+                <img class="transItem" id="wiperight" src="./img/transitions/wiperight.png" alt="">
+                <img class="transItem" id="wipedown" src="./img/transitions/wipedown.png" alt="">
+            </div>
+
+            <div id="effects" class="fileOptions" style="display:none">
+                <img class="effectItem" src="./img/effects/vintage.png" alt="">
+                <img class="effectItem" src="./img/effects/negative.png" alt="">
+                <img class="effectItem" src="./img/effects/holiday.png" alt="">
+            </div>
+            <div id="text" class="fileOptions" style="display:none">
+                <img class="textItem" src="./img/textStyles/style1.png" alt="">
+                <img class="textItem" src="./img/textStyles/style2.png" alt="">
+                <img class="textItem" src="./img/textStyles/style3.png" alt="">
+            </div>
+        </div>
+
+        <script>
+            function openOption(tabName, button) {
+                var i;
+                var x = document.getElementsByClassName("fileOptions");
+                var y = document.getElementsByClassName("fileButton");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                    y[i].style.opacity = "0.6";
+                }
+                document.getElementById(tabName).style.display = "block";
+                button.style.opacity = "1";
+            }
+        </script>
+    </div>
+
+    <div id="toolBar">
+        <!-- hand/cut/copy/paste/undo/redo/trim/ -->
+        <div id="Selection" class="toolButtons highlightable">
+            <img src="./img/toolbar/selection.jpg" alt="" title="selection tool">
+        </div>
+        <div id="Trim" class="toolButtons highlightable">
+            <img src="./img/toolbar/trim.jpg" alt="" title="trim">
+        </div>
+        <div id="undo" class="toolButtons highlightable">
+            <img src="./img/toolbar/undo.jpg" alt="" title="undo">
+        </div>
+        <div id="redo" class="toolButtons highlightable">
+            <img src="./img/toolbar/redo.jpg" alt="" title="redo">
+        </div>
+
+        <div id="Cut" class="toolButtons highlightable">
+            <img src="./img/toolbar/cut.jpg" alt="" title="cut">
+        </div>
+
+        <div id="Copy" class="toolButtons highlightable">
+            <img src="./img/toolbar/copy.jpg" alt="" title="copy">
+        </div>
+        <div id="Paste" class="toolButtons highlightable">
+            <img src="./img/toolbar/paste.jpg" alt="" title="paste">
+        </div>
+
+    </div>
+
+
+    <div id="detailsBox" title="A full implementation would provide details based on what is currently selected and shown in the preview box to the right. For example different metadata would be provided if you were viewing an imported file/edited file/transition/effect/etc.">
+        <div id="TransitionContents" class="detailContents detailOptions" style="display:none">
+            <h1>Transition Options</h1>
+            <p>Type:</p>
+            <p>Duration:</p>
+            <p>Orientation:</p>
+            <p>Reverse:</p>
+            <p>Ease In:</p>
+            <p>Ease Out:</p>
+        </div>
+
+        <div id="effectContents" class="detailContents detailOptions" style="display:none">
+            <h1>Effect Options</h1>
+            <p>Type:</p>
+            <p>Brightness:</p>
+            <p>Contrast:</p>
+            <p>Saturation:</p>
+            <p>Opacity:</p>
+            <p>X-Position:</p>
+            <p>Y-Position:</p>
+            <p>Rotation:</p>
+        </div>
+
+        <div id="TextContents" class="detailContents detailOptions" style="display:none">
+            <h1>Text Options</h1>
+            <p>Type:</p>
+            <p>Text:</p>
+            <p>Font:</p>
+            <p>Size:</p>
+            <p>Opacity:</p>
+            <p>X-Position:</p>
+            <p>Y-Position:</p>
+            <p>Rotation:</p>
+        </div>
+
+        <div id="mediaContents" class="detailContents detailOptions" style="display:none">
+                <h1>Media Details</h1>
+                <p>File Name:</p>
+                <p>Duration:</p>
+                <p>Frames/Second:</p>
+                <p>Resolution:</p>
+                <p>Audio Details: 48000Hz - 16 bit - Stereo</p>
+        </div>
+
+        <div id="audioContents" class="detailContents detailOptions" style="display:none">
+                <h1>Audio Details</h1>
+                <p>Volume:</p>
+                <p>Audio Type:</p>
+                <p>Duration:</p>
+                <p>Mix:</p>
+                <p>Fade In:</p>
+                <p>Fade Out:</p>
+        </div>
+
+        <div id="projectContents" class="detailContents detailOptions">
+            <h1>Project Details</h1>
+            <p>Name:</p>
+            <p>Duration:</p>
+            <p>Frames/Second:</p>
+            <p>Resolution:</p>
+            <p>Audio Details: 48000Hz - 16 bit - Stereo</p>
+        </div>
+
+    </div>
+
+    <script>
+        function loadMedia(){
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('mediaContents').style.display = "block";
+        }
+        $(document).on('click', ".transBox, .transItem", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('TransitionContents').style.display = "block";
+        });
+        $(document).on('click', ".movie, #previewBox2", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('mediaContents').style.display = "block";
+        });
+        $(document).on('click', ".effectOnClip, .effectItem", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('effectContents').style.display = "block";
+        });
+        $(document).on('click', ".textOnClip, .textItem", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('TextContents').style.display = "block";
+        });
+        $(document).on('click', ".music, .musicOnTrack", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('audioContents').style.display = "block";
+        });
+
+        $(document).on('click', ".mediaButton, #previewBox, .projectButton", function () {
+            // function openDetails(itemName) {
+            var i;
+            var x = document.getElementsByClassName("detailOptions");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            document.getElementById('projectContents').style.display = "block";
+        });
+
+    </script>
+
+
+    <div id="previewBox" onmouseover="getTitle('#previewHeader')" onmouseout="hideTitle('#previewHeader')">
+        <div id="previewHeader">
+            <p style="position: absolute; top:30px;left:-35px; -webkit-transform:rotate(-90deg); transform:rotate(-90deg);">Project Video</p>
+            <div style="background-color: rgb(255, 196, 0); width:100%; height:3%;"></div>
+        </div>
+        <input title="this would allow you to scrub through the file/video you are currently playing on the screen" id="time-line"
+            type="range" min="0" max="100" step="1" value="0" oninput="SetVolume1(this)" style="position:absolute; width:95%; outline: none; bottom:2%; left:2.5%;"></input>
+        <script>
+            function SetVolume1(em) {
+                $('input[type="range"]').change(function () {
+                    var val = ($(em).val() - $(em).attr('min')) / ($(em).attr('max') - $(em).attr('min'));
+                    $(em).css('background-image',
+                        '-webkit-gradient(linear, left top, right top, '
+                        + 'color-stop(' + val + ',  rgb(255, 196, 0)), '
+                        + 'color-stop(' + val + ', #C5C5C5)'
+                        + ')'
+                    );
+                });
+            }
+
+            function getTitle(em) {
+                $(em).css("-webkit-transform", "translate(-20px, 0px)");
+            }
+            function hideTitle(em) {
+                $(em).css("-webkit-transform", "translate(0px, 0px)");
+            }
+
+
+        </script>
+
+        <!-- <input type="range" min="1" max="100" step="1" value="15"> -->
+        <script>
+        </script>
+
+        <div id="playbar"></div>
+        <div id="mediaControls">
+            <!-- <div style="margin-top: 5px; width: 35px; height: 35px; background-color: white;"></div> -->
+            <div style="margin-top: 5px; text-align:center;">
+                <a style="position:absolute; left:2%; top:33%;" title="This would match the current position in time of what is currently showing in the preview screen">00:00:00</a>
+                <img class="mediaButton" src="./img/mediaControls/skipb.png" alt="" title="Skip Back">
+                <img class="mediaButton" src="./img/mediaControls/keyb.png" alt="" title="Keyframe Back">
+                <img class="mediaButton" src="./img/mediaControls/play.png" alt="" title="Play. Full implementation would play/pause the current file selected or the full length of the project currently on the filmstrip(left side). A playhead on the filmstrip would correspond to the playbar position on the preview screen.">
+                <img class="mediaButton" src="./img/mediaControls/keyf.png" alt="" title="Keyframe Forward">
+                <img class="mediaButton" src="./img/mediaControls/skipf.png" alt="" title="Skip Forward">
+                <img class="mediaButton" src="./img/mediaControls/fullscreen.png" alt="" style="position:absolute; right: 2%;" title="Fullscreen">
+            </div>
+
+        </div>
+        <div id="resizable"></div>
+    </div>
+
+    <div id="previewBox2" onmouseover="getTitle('#clipPreviewHeader')" onmouseout="hideTitle('#clipPreviewHeader')">
+        <div id="clipPreviewHeader">
+            <p style="position: absolute; top:30px;left:-32px; -webkit-transform:rotate(-90deg); transform:rotate(-90deg);">Clip Preview</p>
+            <div style="background-color: rgb(0, 153, 255); width:100%; height:3%;"></div>
+        </div>
+        <input title="this would allow you to scrub through the file/video you are currently playing on the screen" id="time-line"
+            type="range" min="0" max="100" step="1" value="0" oninput="SetVolume2(this)" style="position:absolute; width:95%; outline: none; bottom:2%; left:2.5%;"></input>
+        <script>
+            function SetVolume2(em) {
+                    $('input[type="range"]').change(function () {
+                        var val = ($(em).val() - $(em).attr('min')) / ($(em).attr('max') - $(em).attr('min'));
+                        $(em).css('background-image',
+                            '-webkit-gradient(linear, left top, right top, '
+                            + 'color-stop(' + val + ',  rgb(0, 153, 255)), '
+                            + 'color-stop(' + val + ', #C5C5C5)'
+                            + ')'
+                        );
+                    });
+                }
+        </script>
+
+        <!-- <input type="range" min="1" max="100" step="1" value="15"> -->
+        <script>
+        </script>
+
+        <div id="playbar"></div>
+        <div id="mediaControls">
+            <!-- <div style="margin-top: 5px; width: 35px; height: 35px; background-color: white;"></div> -->
+            <div style="margin-top: 5px; text-align:center;">
+                <a style="position:absolute; left:2%; top:33%;" title="This would match the current position in time of what is currently showing in the preview screen">00:00:00</a>
+                <img class="mediaButton" src="./img/mediaControls/skipb.png" alt="" title="Skip Back">
+                <img class="mediaButton" src="./img/mediaControls/keyb.png" alt="" title="Keyframe Back">
+                <img class="mediaButton" src="./img/mediaControls/play2.png" alt="" title="Play. Full implementation would play/pause the current file selected or the full length of the project currently on the filmstrip(left side). A playhead on the filmstrip would correspond to the playbar position on the preview screen.">
+                <img class="mediaButton" src="./img/mediaControls/keyf.png" alt="" title="Keyframe Forward">
+                <img class="mediaButton" src="./img/mediaControls/skipf.png" alt="" title="Skip Forward">
+                <img class="mediaButton" src="./img/mediaControls/fullscreen.png" alt="" style="position:absolute; right: 2%;" title="Fullscreen">
+            </div>
+
+        </div>
+        <div id="resizable"></div>
+
+    </div>
+
+
+</body>
+
+</html>
