@@ -137,7 +137,7 @@
                         newClip = '<div class="clip"><div id="clipText">Drag a Video Clip here</div></div>';
                         $(newTrans).appendTo('#sortable');
                         $(newClip).appendTo('#sortable');
-                        $(this).append('<div class="movieOnClip" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><img src="/img/previews/yopierre.png" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;" title="Drag and drop Effects and Text here to customize your video"><span class="succ" title="Full implementation would make this dynamically change when the clip size changes, it is currently static" style="padding: 2px; position: absolute; top: 0px; right: 0px; background-color:black;">00:00:30</span></div>');
+                        $(this).append('<div class="movieOnClip"  onclick="loadMedia()" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;"><img src="/img/previews/yopierre.png" style="width: 100%; height: 100%; position:absolute; top:0px; left:0px;" title="Drag and drop Effects and Text here to customize your video"><span class="succ" title="Full implementation would make this dynamically change when the clip size changes, it is currently static" style="padding: 2px; position: absolute; top: 0px; right: 0px; background-color:black;">00:00:30</span></div>');
                         // $(this).append();
                         $(this).droppable("option", "disabled", true);
                     }
@@ -274,8 +274,8 @@
         <div id="fileContents">
             <div id="projectFiles" class="fileOptions">
 
-                <img class="movie" src="./img/importClips/movieClip.png" alt="">
-                <img class="music" src="./img/importClips/musicClip.png" alt="">
+                <img class="movie" src="./img/importClips/movieClip.png" alt="" title="Click and Drag to the Film Strip">
+                <img class="music" src="./img/importClips/musicClip.png" alt="" title="Click and Drag to the Audio Strip">
 
                 <!-- <div style="width: 120px; height:120px; border: solid 1px black;"></div> -->
                 <div class="tooltip">
@@ -285,20 +285,20 @@
             </div>
 
             <div id="transitions" class="fileOptions" style="display:none">
-                <img class="transItem" id="cube" src="./img/transitions/cube.png" alt="">
-                <img class="transItem" id="wiperight" src="./img/transitions/wiperight.png" alt="">
-                <img class="transItem" id="wipedown" src="./img/transitions/wipedown.png" alt="">
+                <img class="transItem" id="cube" src="./img/transitions/cube.png" alt="" title="Click and Drag to a transition box on the Film Strip">
+                <img class="transItem" id="wiperight" src="./img/transitions/wiperight.png" alt="" title="Click and Drag to a transition box on the Film Strip">
+                <img class="transItem" id="wipedown" src="./img/transitions/wipedown.png" alt="" title="Click and Drag to a transition box on the Film Strip">
             </div>
 
             <div id="effects" class="fileOptions" style="display:none">
-                <img class="effectItem" src="./img/effects/vintage.png" alt="">
-                <img class="effectItem" src="./img/effects/negative.png" alt="">
-                <img class="effectItem" src="./img/effects/holiday.png" alt="">
+                <img class="effectItem" src="./img/effects/vintage.png" alt="" title="Click and Drag to a clip on the Film Strip">
+                <img class="effectItem" src="./img/effects/negative.png" alt="" title="Click and Drag to a clip on the Film Strip">
+                <img class="effectItem" src="./img/effects/holiday.png" alt="" title="Click and Drag to a clip on the Film Strip">
             </div>
             <div id="text" class="fileOptions" style="display:none">
-                <img class="textItem" src="./img/textStyles/style1.png" alt="">
-                <img class="textItem" src="./img/textStyles/style2.png" alt="">
-                <img class="textItem" src="./img/textStyles/style3.png" alt="">
+                <img class="textItem" src="./img/textStyles/style1.png" alt="" title="Click and Drag to a clip on the Film Strip">
+                <img class="textItem" src="./img/textStyles/style2.png" alt="" title="Click and Drag to a clip on the Film Strip">
+                <img class="textItem" src="./img/textStyles/style3.png" alt="" title="Click and Drag to a clip on the Film Strip">
             </div>
         </div>
 
