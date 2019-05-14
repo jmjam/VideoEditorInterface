@@ -1,5 +1,5 @@
 # VideoEditorInterface
-A simple mock interface which exercises design principles of Human Computer Interaction
+A mock interface which exercises design principles of Human Computer Interaction
 
 Requires: Node.js / NPM, electron
 ...
